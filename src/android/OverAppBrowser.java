@@ -19,50 +19,30 @@
 package com.lesfrancschatons.cordova.plugins.overappbrowser;
 
 import android.annotation.SuppressLint;
-import com.lesfrancschatons.cordova.plugins.overappbrowser.OverAppBrowserDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.Browser;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.InputType;
+import android.provider.Browser;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-
-import org.apache.cordova.CallbackContext;
-import org.apache.cordova.Config;
-import org.apache.cordova.CordovaArgs;
-import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.LOG;
-import org.apache.cordova.PluginManager;
-import org.apache.cordova.PluginResult;
+import com.lesfrancschatons.cordova.plugins.overappbrowser.OverAppBrowserDialog;
+import org.apache.cordova.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.animation.ObjectAnimator;
-import android.animation.AnimatorSet;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -375,6 +355,8 @@ public class OverAppBrowser extends CordovaPlugin {
      */
     public void closeDialog() {
         final WebView childView = this.inAppWebView;
+        OverAppBrowser _this = this;
+
         // The JS protects against multiple calls, so this should happen only when
         // closeDialog() is called by other native code.
         if (childView == null) {
@@ -389,6 +371,13 @@ public class OverAppBrowser extends CordovaPlugin {
                         if (dialog != null) {
                             dialog.dismiss();
                         }
+
+                        childView.clearHistory();
+                        childView.clearCache(false);
+                        childView.onPause();
+                        childView.destroy();
+                        _this.inAppWebView = null;
+                        dialog = null;
                     }
                 });
                 // NB: From SDK 19: "If you call methods on WebView from any thread
@@ -544,7 +533,7 @@ public class OverAppBrowser extends CordovaPlugin {
                 wlp.gravity = Gravity.TOP | Gravity.LEFT;
                 wlp.width = this.dpToPixels(webViewParams.get("width"));
                 wlp.height = this.dpToPixels(webViewParams.get("height"));
-                wlp.dimAmount=0.5f; 
+                wlp.dimAmount=0.5f;
                 window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
                 window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
@@ -584,7 +573,7 @@ public class OverAppBrowser extends CordovaPlugin {
                 inAppWebView.getSettings().setUseWideViewPort(true);
                 inAppWebView.requestFocus();
                 inAppWebView.requestFocusFromTouch();
-               
+
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                 lp.copyFrom(dialog.getWindow().getAttributes());
                 lp.x = this.dpToPixels(webViewParams.get("x"));
@@ -656,8 +645,8 @@ public class OverAppBrowser extends CordovaPlugin {
             public void run() {
                 // Window window = childView.getWindow();
                 // WindowManager.LayoutParams wlp = window.getAttributes();
-               
-                
+
+
                 // wlp.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
                 // wlp.dimAmount = toAlpha;
                 // window.setAttributes(wlp);
