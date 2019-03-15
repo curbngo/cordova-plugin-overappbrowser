@@ -98,7 +98,7 @@ public class OverAppBrowser extends CordovaPlugin {
             }
 
             final String target = t;
-            final HashMap<String, Boolean> features = parseFeature("location=no,hidden=yes,zoom=no,hidden=yes,hardwareback=no");
+            final HashMap<String, Boolean> features = parseFeature("location=no,hidden=yes,zoom=no,hidden=yes");
             final HashMap<String, Integer> params = new HashMap<String, Integer>();
             params.put("x", args.getInt(1));
             params.put("y", args.getInt(2));
@@ -518,7 +518,7 @@ public class OverAppBrowser extends CordovaPlugin {
                 dialog = new OverAppBrowserDialog(cordova.getActivity(), android.R.style.Theme_NoTitleBar);
                 dialog.getWindow().getAttributes().windowAnimations = android.R.style.Animation_Dialog;
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setCancelable(true);
+                dialog.setCancelable(false);
                 dialog.setOverAppBroswer(getOverAppBrowser());
 
                 Window window = dialog.getWindow();
