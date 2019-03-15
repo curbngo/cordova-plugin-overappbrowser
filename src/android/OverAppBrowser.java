@@ -98,7 +98,7 @@ public class OverAppBrowser extends CordovaPlugin {
             }
 
             final String target = t;
-            final HashMap<String, Boolean> features = parseFeature("location=no,hidden=yes,zoom=no,hidden=yes");
+            final HashMap<String, Boolean> features = parseFeature("location=no,hidden=yes,zoom=no,hidden=yes,hardwareback=no");
             final HashMap<String, Integer> params = new HashMap<String, Integer>();
             params.put("x", args.getInt(1));
             params.put("y", args.getInt(2));
