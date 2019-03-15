@@ -224,7 +224,7 @@ public class OverAppBrowser extends CordovaPlugin {
             pluginResult.setKeepCallback(true);
             this.callbackContext.sendPluginResult(pluginResult);
         } else if (action.equals("toggleHardwareBack")) {
-            this.hadwareBackButton = args.getBoolean(1)
+            this.hadwareBackButton = args.getBoolean(1);
         } else {
             return false;
         }
