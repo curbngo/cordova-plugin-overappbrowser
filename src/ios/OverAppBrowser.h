@@ -25,7 +25,7 @@
 
 
 - (void)open:(CDVInvokedUrlCommand *)command;
-- (void)fade:(CDVInvokedUrlCommand *)command;
+- (void)hide:(CDVInvokedUrlCommand *)command;
 - (void)resize:(CDVInvokedUrlCommand *)command;
 - (void)injectScriptCode:(CDVInvokedUrlCommand*)command;
 - (void)close:(CDVInvokedUrlCommand *)command;

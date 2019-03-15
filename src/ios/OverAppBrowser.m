@@ -89,7 +89,7 @@
 
 }
 
-- (void)fade:(CDVInvokedUrlCommand *)command {
+- (void)hide:(CDVInvokedUrlCommand *)command {
     NSArray* arguments = [command arguments];
     NSUInteger argc = [arguments count];
     

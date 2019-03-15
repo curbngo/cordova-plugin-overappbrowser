@@ -27,17 +27,17 @@ OverAppBrowser.prototype = {
             this.channels[event.type].fire(event);
         }
     },
-    close: function (eventname) {
+    close: function () {
         exec(null, null, "OverAppBrowser", "close", []);
     },
-    show: function (eventname) {
+    show: function () {
         exec(null, null, "OverAppBrowser", "show", []);
     },
-    fade: function (toAlpha, duration) {
-        exec(null, null, "OverAppBrowser", "fade", [toAlpha, duration]);
+    hide: function (toAlpha, duration) {
+        exec(null, null, "OverAppBrowser", "hide", [toAlpha, duration]);
     },
-    resize: function (originx, originy, width, height) {
-        exec(null, null, "OverAppBrowser", "resize", [originx, originy, width, height]);
+    resize: function (originX, originY, width, height) {
+        exec(null, null, "OverAppBrowser", "resize", [originX, originY, width, height]);
     },
     addEventListener: function (eventname,f) {
         if (eventname in this.channels) {

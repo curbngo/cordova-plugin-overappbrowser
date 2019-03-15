@@ -218,18 +218,15 @@ public class OverAppBrowser extends CordovaPlugin {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
             pluginResult.setKeepCallback(true);
             this.callbackContext.sendPluginResult(pluginResult);
-        } else if (action.equals("fade")) {
-            float to = (float) args.getDouble(0);
-            int duration = args.getInt(1);
-
-            fadeTo(to, duration);
+        } else if (action.equals("hide")) {
+            hide();
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
             pluginResult.setKeepCallback(true);
             this.callbackContext.sendPluginResult(pluginResult);
-
         } else {
             return false;
         }
+
         return true;
     }
 
@@ -626,32 +623,11 @@ public class OverAppBrowser extends CordovaPlugin {
         });
     }
 
-    private void fadeTo(float to, int duration) {
-        final WebView childView = this.inAppWebView;
-        // The JS protects against multiple calls, so this should happen only when
-        // closeDialog() is called by other native code.
-        if (childView == null) {
-            return;
-        }
-
-        final float toAlpha = to;
-        final int animationDuration = duration;
+    private void hide() {
         this.cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // Window window = childView.getWindow();
-                // WindowManager.LayoutParams wlp = window.getAttributes();
-
-
-                // wlp.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-                // wlp.dimAmount = toAlpha;
-                // window.setAttributes(wlp);
-                // ObjectAnimator fade = ObjectAnimator.ofFloat(dialog.getWindow(), "alpha",  0.0f, toAlpha);
-                // fade.setDuration(animationDuration);
-
-                // final AnimatorSet mAnimationSet = new AnimatorSet();
-
-                // mAnimationSet.play(fade);
+                dialog.hide();
             }
         });
     }
