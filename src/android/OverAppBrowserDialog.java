@@ -42,7 +42,7 @@ public class OverAppBrowserDialog extends Dialog {
         this.overAppBrowser = browser;
     }
 
-    public void onBackPressed () {
+    /*public void onBackPressed () {
         if (this.overAppBrowser == null) {
             this.dismiss();
         } else {
@@ -54,5 +54,5 @@ public class OverAppBrowserDialog extends Dialog {
                 this.overAppBrowser.closeDialog();
             }
         }
-    }
+    }*/
 }
