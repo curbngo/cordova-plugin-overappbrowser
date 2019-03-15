@@ -18,13 +18,8 @@
 */
 package com.lesfrancschatons.cordova.plugins.overappbrowser;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by Oliver on 22/11/2013.
@@ -42,17 +37,19 @@ public class OverAppBrowserDialog extends Dialog {
         this.overAppBrowser = browser;
     }
 
-    /*public void onBackPressed () {
+    public void onBackPressed () {
+        if (!this.overAppBrowser.hardwareBack()) {
+            return;
+        }
+
         if (this.overAppBrowser == null) {
             this.dismiss();
         } else {
-            // better to go through the in overAppBrowser
-            // because it does a clean up
-            if (this.overAppBrowser.hardwareBack() && this.overAppBrowser.canGoBack()) {
+            if (this.overAppBrowser.canGoBack()) {
                 this.overAppBrowser.goBack();
             }  else {
                 this.overAppBrowser.closeDialog();
             }
         }
-    }*/
+    }
 }

@@ -9,7 +9,7 @@ Difference with the original repository
 There are few difference/changes as compared to the original version
 
 1. Clearing & closing the WebView after exiting the OverAppBrowser to prevent memory link in Android
-2. Not closing the OverAppBrowser from Android back button
+2. A method to toggle the hardware back button `toggleHardwareBack`
 3. Changed id of the plugin
 
 Installation

@@ -39,6 +39,9 @@ OverAppBrowser.prototype = {
     resize: function (originX, originY, width, height) {
         exec(null, null, "OverAppBrowser", "resize", [originX, originY, width, height]);
     },
+    toggleHardwareBack: function (enable) {
+        exec(null, null, "OverAppBrowser", "toggleHardwareBack", [enable]);
+    },
     addEventListener: function (eventname,f) {
         if (eventname in this.channels) {
             this.channels[eventname].subscribe(f);
