@@ -82,19 +82,21 @@ public class OverAppBrowser extends CordovaPlugin {
     /**
      * Executes the request and returns PluginResult.
      *
-     * @param action        The action to execute.
-     * @param args          JSONArry of arguments for the plugin.
-     * @param callbackId    The callback id used when calling back into JavaScript.
-     * @return              A PluginResult object with a status and message.
+     * @param action     The action to execute.
+     * @param args       JSONArry of arguments for the plugin.
+     * @param callbackId The callback id used when calling back into JavaScript.
+     * @return A PluginResult object with a status and message.
      */
     public boolean execute(String action, CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
         if (action.equals("open")) {
             this.callbackContext = callbackContext;
             final String url = args.getString(0);
             String t = args.optString(1);
+
             if (t == null || t.equals("") || t.equals(NULL)) {
                 t = SELF;
             }
+
             final String target = t;
             final HashMap<String, Boolean> features = parseFeature("location=no,hidden=yes,zoom=no,hidden=yes");
             final HashMap<String, Integer> params = new HashMap<String, Integer>();
@@ -124,7 +126,7 @@ public class OverAppBrowser extends CordovaPlugin {
                         if (shouldAllowNavigation == null) {
                             try {
                                 Method iuw = Config.class.getMethod("isUrlWhiteListed", String.class);
-                                shouldAllowNavigation = (Boolean)iuw.invoke(null, url);
+                                shouldAllowNavigation = (Boolean) iuw.invoke(null, url);
                             } catch (NoSuchMethodException e) {
                             } catch (IllegalAccessException e) {
                             } catch (InvocationTargetException e) {
@@ -133,9 +135,9 @@ public class OverAppBrowser extends CordovaPlugin {
                         if (shouldAllowNavigation == null) {
                             try {
                                 Method gpm = webView.getClass().getMethod("getPluginManager");
-                                PluginManager pm = (PluginManager)gpm.invoke(webView);
+                                PluginManager pm = (PluginManager) gpm.invoke(webView);
                                 Method san = pm.getClass().getMethod("shouldAllowNavigation", String.class);
-                                shouldAllowNavigation = (Boolean)san.invoke(pm, url);
+                                shouldAllowNavigation = (Boolean) san.invoke(pm, url);
                             } catch (NoSuchMethodException e) {
                             } catch (IllegalAccessException e) {
                             } catch (InvocationTargetException e) {
@@ -147,8 +149,7 @@ public class OverAppBrowser extends CordovaPlugin {
                             webView.loadUrl(url);
                         }
                         //Load the dialer
-                        else if (url.startsWith(WebView.SCHEME_TEL))
-                        {
+                        else if (url.startsWith(WebView.SCHEME_TEL)) {
                             try {
                                 Log.d(LOG_TAG, "loading in dialer");
                                 Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -180,18 +181,15 @@ public class OverAppBrowser extends CordovaPlugin {
                     callbackContext.sendPluginResult(pluginResult);
                 }
             });
-        }
-        else if (action.equals("close")) {
+        } else if (action.equals("close")) {
             closeDialog();
-        }
-        else if (action.equals("injectScriptCode")) {
+        } else if (action.equals("injectScriptCode")) {
             String jsWrapper = null;
             if (args.getBoolean(1)) {
                 jsWrapper = String.format("prompt(JSON.stringify([eval(%%s)]), 'gap-iab://%s')", callbackContext.getCallbackId());
             }
             injectDeferredObject(args.getString(0), jsWrapper);
-        }
-        else if (action.equals("injectScriptFile")) {
+        } else if (action.equals("injectScriptFile")) {
             String jsWrapper;
             if (args.getBoolean(1)) {
                 jsWrapper = String.format("(function(d) { var c = d.createElement('script'); c.src = %%s; c.onload = function() { prompt('', 'gap-iab://%s'); }; d.body.appendChild(c); })(document)", callbackContext.getCallbackId());
@@ -199,8 +197,7 @@ public class OverAppBrowser extends CordovaPlugin {
                 jsWrapper = "(function(d) { var c = d.createElement('script'); c.src = %s; d.body.appendChild(c); })(document)";
             }
             injectDeferredObject(args.getString(0), jsWrapper);
-        }
-        else if (action.equals("injectStyleCode")) {
+        } else if (action.equals("injectStyleCode")) {
             String jsWrapper;
             if (args.getBoolean(1)) {
                 jsWrapper = String.format("(function(d) { var c = d.createElement('style'); c.innerHTML = %%s; d.body.appendChild(c); prompt('', 'gap-iab://%s');})(document)", callbackContext.getCallbackId());
@@ -208,8 +205,7 @@ public class OverAppBrowser extends CordovaPlugin {
                 jsWrapper = "(function(d) { var c = d.createElement('style'); c.innerHTML = %s; d.body.appendChild(c); })(document)";
             }
             injectDeferredObject(args.getString(0), jsWrapper);
-        }
-        else if (action.equals("injectStyleFile")) {
+        } else if (action.equals("injectStyleFile")) {
             String jsWrapper;
             if (args.getBoolean(1)) {
                 jsWrapper = String.format("(function(d) { var c = d.createElement('link'); c.rel='stylesheet'; c.type='text/css'; c.href = %%s; d.head.appendChild(c); prompt('', 'gap-iab://%s');})(document)", callbackContext.getCallbackId());
@@ -217,14 +213,12 @@ public class OverAppBrowser extends CordovaPlugin {
                 jsWrapper = "(function(d) { var c = d.createElement('link'); c.rel='stylesheet'; c.type='text/css'; c.href = %s; d.head.appendChild(c); })(document)";
             }
             injectDeferredObject(args.getString(0), jsWrapper);
-        }
-        else if (action.equals("show")) {
+        } else if (action.equals("show")) {
             show();
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
             pluginResult.setKeepCallback(true);
             this.callbackContext.sendPluginResult(pluginResult);
-        }
-        else if (action.equals("fade")) {
+        } else if (action.equals("fade")) {
             float to = (float) args.getDouble(0);
             int duration = args.getInt(1);
 
@@ -257,19 +251,19 @@ public class OverAppBrowser extends CordovaPlugin {
 
     /**
      * Inject an object (script or style) into the OverAppBrowser WebView.
-     *
+     * <p>
      * This is a helper method for the inject{Script|Style}{Code|File} API calls, which
      * provides a consistent method for injecting JavaScript code into the document.
-     *
+     * <p>
      * If a wrapper string is supplied, then the source string will be JSON-encoded (adding
      * quotes) and wrapped using string formatting. (The wrapper string should have a single
      * '%s' marker)
      *
-     * @param source      The source object (filename or script/style text) to inject into
-     *                    the document.
-     * @param jsWrapper   A JavaScript string to wrap the source string in, so that the object
-     *                    is properly injected, or null if the source string is JavaScript text
-     *                    which should be executed directly.
+     * @param source    The source object (filename or script/style text) to inject into
+     *                  the document.
+     * @param jsWrapper A JavaScript string to wrap the source string in, so that the object
+     *                  is properly injected, or null if the source string is JavaScript text
+     *                  which should be executed directly.
      */
     private void injectDeferredObject(String source, String jsWrapper) {
         String scriptToInject;
@@ -277,7 +271,7 @@ public class OverAppBrowser extends CordovaPlugin {
             org.json.JSONArray jsonEsc = new org.json.JSONArray();
             jsonEsc.put(source);
             String jsonRepr = jsonEsc.toString();
-            String jsonSourceString = jsonRepr.substring(1, jsonRepr.length()-1);
+            String jsonSourceString = jsonRepr.substring(1, jsonRepr.length() - 1);
             scriptToInject = String.format(jsWrapper, jsonSourceString);
         } else {
             scriptToInject = source;
@@ -310,7 +304,7 @@ public class OverAppBrowser extends CordovaPlugin {
             HashMap<String, Boolean> map = new HashMap<String, Boolean>();
             StringTokenizer features = new StringTokenizer(optString, ",");
             StringTokenizer option;
-            while(features.hasMoreElements()) {
+            while (features.hasMoreElements()) {
                 option = new StringTokenizer(features.nextToken(), "=");
                 if (option.hasMoreElements()) {
                     String key = option.nextToken();
@@ -325,9 +319,9 @@ public class OverAppBrowser extends CordovaPlugin {
     /**
      * Display a new browser with the specified URL.
      *
-     * @param url           The url to load.
-     * @param usePhoneGap   Load url in PhoneGap webview
-     * @return              "" if ok, or error message.
+     * @param url         The url to load.
+     * @param usePhoneGap Load url in PhoneGap webview
+     * @return "" if ok, or error message.
      */
     public String openExternal(String url) {
         try {
@@ -345,7 +339,7 @@ public class OverAppBrowser extends CordovaPlugin {
             this.cordova.getActivity().startActivity(intent);
             return "";
         } catch (android.content.ActivityNotFoundException e) {
-            Log.d(LOG_TAG, "InAppBrowser: Error loading url "+url+":"+ e.toString());
+            Log.d(LOG_TAG, "InAppBrowser: Error loading url " + url + ":" + e.toString());
             return e.toString();
         }
     }
@@ -407,6 +401,7 @@ public class OverAppBrowser extends CordovaPlugin {
 
     /**
      * Can the web browser go back?
+     *
      * @return boolean
      */
     public boolean canGoBack() {
@@ -415,6 +410,7 @@ public class OverAppBrowser extends CordovaPlugin {
 
     /**
      * Has the user set the hardware back button to go back
+     *
      * @return boolean
      */
     public boolean hardwareBack() {
@@ -436,7 +432,7 @@ public class OverAppBrowser extends CordovaPlugin {
      * @param url to load
      */
     private void navigate(String url) {
-        InputMethodManager imm = (InputMethodManager)this.cordova.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) this.cordova.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
 
         if (!url.startsWith("http") && !url.startsWith("file:")) {
@@ -457,14 +453,14 @@ public class OverAppBrowser extends CordovaPlugin {
         return this.showLocationBar;
     }
 
-    private OverAppBrowser getOverAppBrowser(){
+    private OverAppBrowser getOverAppBrowser() {
         return this;
     }
 
     /**
      * Display a new browser with the specified URL.
      *
-     * @param url           The url to load.
+     * @param url        The url to load.
      * @param jsonObject
      */
     public String showWebPage(final String url, HashMap<String, Boolean> features, HashMap<String, Integer> params) {
@@ -511,9 +507,9 @@ public class OverAppBrowser extends CordovaPlugin {
              * @return int
              */
             private int dpToPixels(int dipValue) {
-                int value = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP,
-                                                            (float) dipValue,
-                                                            cordova.getActivity().getResources().getDisplayMetrics()
+                int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        (float) dipValue,
+                        cordova.getActivity().getResources().getDisplayMetrics()
                 );
 
                 return value;
@@ -533,9 +529,9 @@ public class OverAppBrowser extends CordovaPlugin {
                 wlp.gravity = Gravity.TOP | Gravity.LEFT;
                 wlp.width = this.dpToPixels(webViewParams.get("width"));
                 wlp.height = this.dpToPixels(webViewParams.get("height"));
-                wlp.dimAmount=0.5f;
+                wlp.dimAmount = 0.5f;
                 window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
                 window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
                 window.setAttributes(wlp);
 
@@ -586,7 +582,7 @@ public class OverAppBrowser extends CordovaPlugin {
                 dialog.getWindow().setAttributes(lp);
                 // the goal of openhidden is to load the url and not display it
                 // Show() needs to be called to cause the URL to be loaded
-                if(openWindowHidden) {
+                if (openWindowHidden) {
                     dialog.hide();
                 }
             }
@@ -607,7 +603,7 @@ public class OverAppBrowser extends CordovaPlugin {
     /**
      * Create a new plugin result and send it back to JavaScript
      *
-     * @param obj a JSONObject contain event payload information
+     * @param obj    a JSONObject contain event payload information
      * @param status the status code to return to the JavaScript environment
      */
     private void sendUpdate(JSONObject obj, boolean keepCallback, PluginResult.Status status) {
@@ -681,11 +677,11 @@ public class OverAppBrowser extends CordovaPlugin {
         /**
          * Notify the host application that a page has started loading.
          *
-         * @param view          The webview initiating the callback.
-         * @param url           The url of the page.
+         * @param view The webview initiating the callback.
+         * @param url  The url of the page.
          */
         @Override
-        public void onPageStarted(WebView view, String url,  Bitmap favicon) {
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             String newloc = "";
             if (url.startsWith("http:") || url.startsWith("https:") || url.startsWith("file:")) {
@@ -700,9 +696,7 @@ public class OverAppBrowser extends CordovaPlugin {
                 } catch (android.content.ActivityNotFoundException e) {
                     LOG.e(LOG_TAG, "Error dialing " + url + ": " + e.toString());
                 }
-            }
-
-            else if (url.startsWith("geo:") || url.startsWith(WebView.SCHEME_MAILTO) || url.startsWith("market:")) {
+            } else if (url.startsWith("geo:") || url.startsWith(WebView.SCHEME_MAILTO) || url.startsWith("market:")) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse(url));
@@ -721,8 +715,7 @@ public class OverAppBrowser extends CordovaPlugin {
                     int parmIndex = url.indexOf('?');
                     if (parmIndex == -1) {
                         address = url.substring(4);
-                    }
-                    else {
+                    } else {
                         address = url.substring(4, parmIndex);
 
                         // If body, then set sms body
@@ -741,8 +734,7 @@ public class OverAppBrowser extends CordovaPlugin {
                 } catch (android.content.ActivityNotFoundException e) {
                     LOG.e(LOG_TAG, "Error sending sms " + url + ":" + e.toString());
                 }
-            }
-            else {
+            } else {
                 newloc = "http://" + url;
             }
 
