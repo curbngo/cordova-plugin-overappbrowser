@@ -1,7 +1,16 @@
-OverAppBrowser 1.2
+OverAppBrowser
 ==================
 
 Render a webview over your cordova webview (ios and android).
+
+Difference with the original repository
+------------
+
+There are few difference/changes as compared to the original version
+
+1. Clearing & closing the WebView after exiting the OverAppBrowser to prevent memory link in Android
+2. Not closing the OverAppBrowser from Android back button
+3. Changed id of the plugin
 
 Installation
 ------------
@@ -14,22 +23,22 @@ To install from **command line**:
 Documentation
 -------------
 
-	//function(strUrl, originx, originy, width, height, isAutoFadeIn)
+    //function(strUrl, originx, originy, width, height, isAutoFadeIn)
     oab = new OverAppBrowser('http://www.google.fr', 0, 100, 320, 320, true);
 
     //Events : loadstop, loadstart, exit, loaderror
     oab.addEventListener('loadstop', function(){
-            //insert inline style
-			oab.insertCSS({code:'#hplogoo {-webkit-transform: rotate(180deg);}'});
+        //insert inline style
+        oab.insertCSS({code:'#hplogoo {-webkit-transform: rotate(180deg);}'});
 
-            //insert css file
-            oab.insertCSS({file:'http://domain.com/style.css'});
+        //insert css file
+        oab.insertCSS({file:'http://domain.com/style.css'});
 
-            //execute javascript code
-            oab.executeScript({code:'window.alert("test");'});
+        //execute javascript code
+        oab.executeScript({code:'window.alert("test");'});
 
-            //insert javascript file
-            oab.executeScript({file:'http://domain.com/script.js'});
+        //insert javascript file
+        oab.executeScript({file:'http://domain.com/script.js'});
     });
 
     //Fade the webview
@@ -42,4 +51,4 @@ Documentation
     oab.close();
 
 
-This loads google.fr over your html app at x=0, y=100, width=320, height=320 and rotates the homepage logo
+This loads `http://google.fr` over your html app at x=0, y=100, width=320, height=320 and rotates the homepage logo
