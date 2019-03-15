@@ -89,6 +89,16 @@
 
 }
 
+- (void)show:(CDVInvokedUrlCommand *)command {
+    NSArray* arguments = [command arguments];
+    NSUInteger argc = [arguments count];
+
+    if (argc < 2) {
+        return;
+    }
+    [self fadeToAlpha:[[arguments objectAtIndex:0] floatValue] duration:[[arguments objectAtIndex:1] floatValue]];
+}
+
 - (void)hide:(CDVInvokedUrlCommand *)command {
     NSArray* arguments = [command arguments];
     NSUInteger argc = [arguments count];

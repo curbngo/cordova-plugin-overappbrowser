@@ -30,8 +30,8 @@ OverAppBrowser.prototype = {
     close: function () {
         exec(null, null, "OverAppBrowser", "close", []);
     },
-    show: function () {
-        exec(null, null, "OverAppBrowser", "show", []);
+    show: function (toAlpha, duration) {
+        exec(null, null, "OverAppBrowser", "show", [toAlpha, duration]);
     },
     hide: function (toAlpha, duration) {
         exec(null, null, "OverAppBrowser", "hide", [toAlpha, duration]);
