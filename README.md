@@ -28,7 +28,7 @@ Installation
 
 To install from **command line**:
 
-    cordova plugin add com.lesfrancschatons.cordova.plugins.overappbrowser
+    cordova plugin add https://github.com/wizpanda/cordova-plugin-overappbrowser.git
 
 
 Documentation
