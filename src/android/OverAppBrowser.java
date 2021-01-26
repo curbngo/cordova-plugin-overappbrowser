@@ -72,11 +72,11 @@ public class OverAppBrowser extends CordovaPlugin {
     private WebView inAppWebView;
     private EditText edittext;
     private CallbackContext callbackContext;
-    private boolean showLocationBar = true;
-    private boolean showZoomControls = true;
+    private boolean showLocationBar = false;
+    private boolean showZoomControls = false;
     private boolean openWindowHidden = false;
-    private boolean clearAllCache = false;
-    private boolean clearSessionCache = false;
+    private boolean clearAllCache = true;
+    private boolean clearSessionCache = true;
     private boolean hadwareBackButton = true;
 
     /**
